@@ -182,7 +182,7 @@ class _ConversationState extends State<Conversation> {
       processMessages();
     });
   }
-
+//lấy danh sách tin nhắn từ cơ sở dữ liệu và cập nhật giao diện người dùng với danh sách tin nhắn mới nhất.
   void processMessages() async {
     var conversationMessages = await _handle.readSection(widget.user.id);
     print('user: ${widget.user.toString()}');
@@ -209,11 +209,11 @@ class _ConversationState extends State<Conversation> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: Color.fromRGBO(255, 255, 255, 0.95),
+        backgroundColor: Color.fromRGBO(225, 218, 137, 1.0),
         appBar: AppBar(
           automaticallyImplyLeading: false,
           iconTheme: const IconThemeData(color: Colors.black54),
-          backgroundColor: const Color.fromRGBO(242, 248, 248, 1),
+          backgroundColor: const Color.fromRGBO(255, 255, 255, 1.0),
           title: Row(
             children: const [
               CircleAvatar(
@@ -302,6 +302,7 @@ class ConversationMessage extends StatelessWidget {
                     height: 15,
                   ),
                   Container(
+                    //giới hạn chiều rộng tối đa
                     constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2 + 40),
                     child: Text(
                       text,

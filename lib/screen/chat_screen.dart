@@ -9,7 +9,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:text_to_speech/text_to_speech.dart';
 import 'package:video_player/video_player.dart';
 
 var widthScreen;
@@ -35,28 +34,19 @@ class _ChatState extends State<Chat> {
   bool checkSetState = true;
   final Handle _handle = Handle();
   String? chooseVoice;
-  final TextToSpeech _textToSpeech = TextToSpeech();
   bool checkPop = true; //kiem tra man hinh pop cua aleart dialog
   bool switchType = true;
   final _focusNode = FocusNode();
   List<String> listKeywords = [];
   late VideoPlayerController _controller;
-  bool suggestTopic = false;
-  bool questionsTopic = false;
-  late String topic;
-  late int indexTopic;
   bool checkGenerateReply = false, checkGenerateQuestion = false;
-  List<String> image = List.filled(4, '');
-  List<String> suggestQuestion = List.filled(4, '');
   bool checkSuggestQuestions = false;
   late String translatedTextImage;
-  bool generateImage = false, generateVoice = true;
   String question = '';
 
   @override
   void initState() {
     super.initState();
-    _textToSpeech.setLanguage('en-US');
   }
 
   @override
@@ -110,10 +100,7 @@ class _ChatState extends State<Chat> {
                       _handleSubmitted(_textEditingController.text);
                     }
                     setState(() {
-                      image[0] = '';
                       listKeywords.clear();
-                      questionsTopic = false;
-                      suggestTopic = false;
                       checkGenerateReply = false;
                     });
                   })
@@ -153,24 +140,9 @@ class _ChatState extends State<Chat> {
     await _handle.addData(
         widget.userCustom.id, '${widget.section}?${widget.title}', widget.title, chatMessage.text, reply.text);
 
-    try {
-        if (chooseVoice == 'Google') {
-          setState(() {
-            _messages.insert(0, reply);
-            questionsTopic = true;
-            topic = '';
-          });
-        }
-        else {
-        setState(() {
-          _messages.insert(0, reply);
-          questionsTopic = true;
-          topic = '';
-        });
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
+    setState(() {
+      _messages.insert(0, reply);
+    });
 
     //Get translate from API
     translatedTextImage = await ApiChatBotServices.translate(reply.text);
@@ -255,7 +227,6 @@ class _ChatState extends State<Chat> {
                       Column(
                         children: [
                           Expanded(child: Center()),
-                         // if (question != '') _buildTextQuestion(),
                           _buildTextComposer(),
                         ],
                       )
@@ -315,18 +286,6 @@ class ChatMessage extends StatelessWidget {
               ],
             ),
             GestureDetector(
-              // onLongPress: () {
-              //   Clipboard.setData(ClipboardData(text: text));
-              //   Fluttertoast.showToast(
-              //     msg: "Text copied to clipboard",
-              //     toastLength: Toast.LENGTH_SHORT,
-              //     gravity: ToastGravity.CENTER,
-              //     timeInSecForIosWeb: 2,
-              //     backgroundColor: const Color.fromRGBO(1, 1, 1, 0.7),
-              //     textColor: Colors.white,
-              //     fontSize: 18.0,
-              //   );
-              // },
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
@@ -365,7 +324,7 @@ class ChatMessage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      MyData.botName ?? 'GLEAN',
+                      MyData.botName ?? 'Chat bot',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ],

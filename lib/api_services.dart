@@ -3,13 +3,13 @@ import '../chatdata/my_data.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-
+// gửi yêu cầu tới các API của OpenAI để lấy thông tin
 class ApiChatBotServices {
   static FlutterSecureStorage storage = const FlutterSecureStorage();
   static String baseUrl_3 = 'https://api.openai.com/v1/completions';
   static String baseUrl_3_5 = 'https://api.openai.com/v1/chat/completions';
   static String baseUrl_image = 'https://api.openai.com/v1/images/generations';
-
+  //sử dụng API của OpenAI để gửi tin nhắn
   static sendMessage(List<String> message) async {
     print('apikey: ${MyData.myApiKey}');
     String model = await storage.read(key: 'model_chat') ?? 'both';

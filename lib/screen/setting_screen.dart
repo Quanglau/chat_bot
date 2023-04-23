@@ -32,9 +32,7 @@ class SettingState extends State<Setting> {
   void initState() {
     super.initState();
     readData().then((value) {
-      print('123');
       setState(() {
-        // Update the state with the loaded data
         userCustom = widget.user;
         isLoading = false;
       });
@@ -45,18 +43,14 @@ class SettingState extends State<Setting> {
   Future<void> readData() async {
     try {
       final List<Future<String?>> futures = [
-        storage.read(key: 'choose_voice'),
         storage.read(key: 'bot_name'),
         storage.read(key: 'bot_avatar'),
         storage.read(key: 'model_chat'),
-        storage.read(key: 'generate_voice'),
         storage.read(key: 'generate_image'),
       ];
       final List<String?> results = await Future.wait(futures);
-
-      botNameController.text = results[1] ?? 'GLEAN';
+      botNameController.text = results[1] ?? 'Chat';
       _selectedModel = results[2] ?? 'both';
-
       keyAPIController.text = myApikey;
     } catch (e) {
       print('Error reading data: $e');
@@ -69,8 +63,10 @@ class SettingState extends State<Setting> {
       children: [
         Expanded(
           child: ListView(
+            //giãn để phù hợp với kích thước nội dung
             shrinkWrap: true,
             children: [
+              //bắt và thực thi sự kiện tương tác
               GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => UserInformation(user: userCustom)));
@@ -259,7 +255,6 @@ class SettingState extends State<Setting> {
               },
             ),
           ),
-
         ],
       ),
     );
@@ -267,12 +262,9 @@ class SettingState extends State<Setting> {
 
   @override
   Widget build(BuildContext context) {
-    print('012');
     Widget expandedScreen() {
       return containerSetting();
-
     }
-
     return Stack(children: [
       WillPopScope(
         onWillPop: () async {
